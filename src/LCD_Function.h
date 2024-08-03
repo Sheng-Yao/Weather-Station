@@ -4,9 +4,8 @@
 // Pictures and the callout funtions
 #include "IEEE_logo.h"
 #include "Alert_symbol.h"
-
-// Include buzzer functionalities
-#include <Buzzer.h>
+#include "Raining_symbol.h"
+#include <UV_Function.h>
 
 // Pin for LCD module
 #define lcd_RST 8
@@ -16,9 +15,11 @@
 #define lcd_CLK 52  // SCK
 #define lcd_LED 3   // 0 if wired to +5V directly
 
+#define Buzzer_PIN 4
+
 // set 5 seconds buffer for each page changing
-#define DELAY_BETWEEN_DISPLAY_PAGE 10000
-#define DELAY_BETWEEN_EACH_SET_DATA 1000
+#define DELAY_BETWEEN_DISPLAY_PAGE 15000
+#define DELAY_BETWEEN_EACH_SET_DATA 500
 
 // Initialize lcd instance from LCD display library (to access to the library functionalities)
 TFT_22_ILI9225 lcd = TFT_22_ILI9225(lcd_RST, lcd_RS, lcd_CS, lcd_LED);
@@ -34,10 +35,10 @@ void resetScreen(TFT_22_ILI9225 lcd){
 const float TEMPERATURE_UPPER_LIMIT = 34.0;
 const float TEMPERATURE_LOWER_LIMIT = 27.5;
 // Humidity
-const float HUMIDITY_UPPER_LIMIT = 70.0;
-const float HUMIDITY_LOWER_LIMIT = 65.5;
+const float HUMIDITY_UPPER_LIMIT = 75.0;
+const float HUMIDITY_LOWER_LIMIT = 67.5;
 // UV Level
-const float UV_LEVEL_UPPER_LIMIT = 15.0;
+const float UV_LEVEL_UPPER_LIMIT = 11.0;
 const float UV_LEVEL_LOWER_LIMIT = 0.0;
 
 // Functions related to Meters
@@ -51,16 +52,29 @@ enum Position{
 enum Type{
   Temperature,
   Humidity,
-  UV_Level
+  UV_Level,
+  Pressure,
+  Altitude
 }Type;
 
 enum Page{
   Logo_Display,
-  GPS_Display,
   Temperature_and_Humidity_Display,
   UV_Display,
   Raining_Display,
+  Pressure_and_Altitude_Display
 }Page;
+
+void setupBuzzer(){
+    pinMode(Buzzer_PIN,OUTPUT);
+    digitalWrite(Buzzer_PIN,HIGH);
+}
+
+void singleBeeps(){
+    digitalWrite(Buzzer_PIN,LOW);
+    delay(500);
+    digitalWrite(Buzzer_PIN,HIGH);
+}
 
 void drawLabels(TFT_22_ILI9225 lcd, enum Type type, enum Position pos, String name){
 
@@ -162,14 +176,32 @@ void drawIndicator(TFT_22_ILI9225 lcd, enum Type type, enum Position pos, float 
 
     byte yPosition;
     if(value > upperLimit){
-        // beep();
+        singleBeeps();
         yPosition = 30;
     }else if(value < lowerLimit){
-        // beep();
+        singleBeeps();
         yPosition = 120;
     }else{
         yPosition = ((upperLimit - value) / (upperLimit - lowerLimit) * (30 - 120) - 30) * -1;
     }
     lcd.fillRectangle(xStartingPosition,30-5,needleWidth,120+5,COLOR_BLACK);
     lcd.fillTriangle(xStartingPosition,yPosition,needleWidth,yPosition + 5,needleWidth,yPosition - 5,COLOR_WHITE);
+}
+
+// Pressure and Altitude Interface
+void drawPressureAndAltitudeLabels(TFT_22_ILI9225 lcd){
+    lcd.setOrientation(3);
+    lcd.setFont(Terminal11x16);
+    lcd.drawText(25,10,"Pressure",COLOR_WHITE);
+    lcd.drawText(25,85,"Altitude",COLOR_WHITE);
+}
+
+void drawPressureAndAltitudeValue(TFT_22_ILI9225 lcd, enum Type type, float values){
+    lcd.setOrientation(3);
+    lcd.setFont(Terminal12x16);
+    if(type == Pressure){
+        lcd.drawText(120,45,String(values,0),COLOR_WHITE);
+    }else if(type == Altitude){
+        lcd.drawText(120,120,String(values,0),COLOR_WHITE);
+    }
 }

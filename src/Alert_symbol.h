@@ -62,5 +62,5 @@ void drawAlert(TFT_22_ILI9225 lcd){
     lcd.setBackgroundColor(COLOR_BLACK);
 
     // Print out alert symbol from origin
-    lcd.drawBitmap(125, 15, alert, 75, 75, COLOR_WHITE);
+    lcd.drawBitmap(125, 15, alert, 75, 75, COLOR_RED);
 }

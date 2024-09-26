@@ -18,7 +18,7 @@
 #define Buzzer_PIN 4
 
 // set 5 seconds buffer for each page changing
-#define DELAY_BETWEEN_DISPLAY_PAGE 15000
+#define DELAY_BETWEEN_DISPLAY_PAGE 10000
 #define DELAY_BETWEEN_EACH_SET_DATA 500
 
 // Initialize lcd instance from LCD display library (to access to the library functionalities)
@@ -35,8 +35,8 @@ void resetScreen(TFT_22_ILI9225 lcd){
 const float TEMPERATURE_UPPER_LIMIT = 34.0;
 const float TEMPERATURE_LOWER_LIMIT = 27.5;
 // Humidity
-const float HUMIDITY_UPPER_LIMIT = 75.0;
-const float HUMIDITY_LOWER_LIMIT = 67.5;
+const float HUMIDITY_UPPER_LIMIT = 80.0;
+const float HUMIDITY_LOWER_LIMIT = 70.0;
 // UV Level
 const float UV_LEVEL_UPPER_LIMIT = 11.0;
 const float UV_LEVEL_LOWER_LIMIT = 0.0;

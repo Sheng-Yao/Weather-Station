@@ -297,7 +297,7 @@ void drawRaining(TFT_22_ILI9225 lcd){
     // Print out raining symbol from origin
     lcd.drawBitmap(0, 0, raining, 220, 160, COLOR_BLUE);
 
-    lcd.setFont(Terminal12x16);
-    lcd.drawText(70, 150, "Raining", COLOR_WHITE);
+    lcd.setFont(Terminal11x16);
+    lcd.drawText(70, 160, "Raining", COLOR_WHITE);
 
 }

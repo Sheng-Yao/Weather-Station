@@ -7,12 +7,24 @@
 #include "BMP180_Function.h"
 
 #define Rain_INPUT 3
+#define RED_PIN 38
+#define GREEN_PIN 36
+#define BLUE_PIN 34
 
 // Variable that handle the state of the system
 byte currentState;
 
 // Setup
 void setup() {
+
+  pinMode(RED_PIN,OUTPUT);
+  digitalWrite(RED_PIN,HIGH);
+
+  //Setup Pin settings
+  pinMode(BLUE_PIN,OUTPUT);
+  digitalWrite(BLUE_PIN,LOW);
+  pinMode(GREEN_PIN,OUTPUT);
+  digitalWrite(GREEN_PIN,LOW);
 
   //Setup Serial monitor for debug purpose
   Serial.begin(9600);
@@ -35,6 +47,9 @@ void setup() {
   currentState = Logo_Display;
   drawLogo(lcd,DELAY_BETWEEN_DISPLAY_PAGE);
   resetScreen(lcd);
+
+  //Output Yellow Light
+  digitalWrite(GREEN_PIN,HIGH);
 }
 
 // Variable for record previous values
@@ -53,6 +68,8 @@ bool isRaining = false;
 
 // Loop
 void loop() {
+
+  digitalWrite(RED_PIN,LOW);
 
   // Variable for current value
   float currentValue1;

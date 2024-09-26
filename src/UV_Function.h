@@ -6,5 +6,5 @@ void setupUVModule(){
 }
 
 byte getUVLevel(){
-     return map(analogRead(UV_PIN), 0, 1024, 1, 10);
+     return analogRead(UV_PIN);
 }
